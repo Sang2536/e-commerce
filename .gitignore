@@ -22,3 +22,24 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Laravel specific
+/storage/app/*
+!/storage/app/public
+/storage/framework/*
+!/storage/framework/cache
+!/storage/framework/sessions
+!/storage/framework/views
+/storage/logs/*
+/public/mix-manifest.json
+
+# Composer & npm
+composer.lock
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# OS & editor files
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
