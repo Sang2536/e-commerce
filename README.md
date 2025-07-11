@@ -49,6 +49,7 @@ php artisan serve
 
 
 ## Model
+    Dự kiến
 - Nhóm người dùng & quyền hạn
   - User	            ->  Quản trị viên (admin, staff, moderator...)
   - Customer	        ->	Người mua hàng
@@ -116,3 +117,91 @@ php artisan serve
   - Setting             ->  Cài đặt cho các Model
   - ApiSetting          ->  Cài đặt kết nối Api
   - SocialSetting       ->  Cài đặt kết nối mạng xã hội
+
+    -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+    BẢNG QUAN HỆ MODEL
+        Category	    hasMany(Product)
+
+        Product	        belongsTo(Category)
+                        belongsToMany(Discount)
+                        belongsToMany(Promotion)
+                        hasMany(ProductTranslation)
+                        hasMany(Review)
+
+        Customer	    hasMany(Order)
+                        hasMany(Review)
+                        hasMany(Shipping)
+
+        Order	        hasMany(OrderItem)
+                        belongsTo(Customer)
+                        belongsTo(Shipping)
+                        belongsTo(Payment)
+                        belongsTo(TaxRate)
+                        belongsTo(Discount)
+
+        Shipping	    hasMany(Order)
+                        belongsTo(Customer)
+                        belongsTo(ShippingMethod)
+
+        ShippingMethod	hasMany(Shipping)
+
+        Payment	        hasMany(Order)
+                        belongsTo(PaymentMethod)
+
+        PaymentMethod	hasMany(Payment)
+
+        Discount	    hasMany(Order)
+                        hasMany(DiscountTranslation)
+                        belongsToMany(Product)
+
+        Promotion	    hasMany(PromotionTranslation)
+                        belongsToMany(Product)
+
+        Review	        belongsTo(Customer)
+                        belongsTo(Product)
+
+        TaxRate	        hasMany(Order)
+                        can - belongTo(Product)
+
+        Translate	    MorphTo: áp dụng cho ProductTranslation, CategoryTranslation, DiscountTranslation, PromotionTranslation, v.v.
+
+        ProductTranslation	    belongsTo(Product)
+
+        CategoryTranslation	    belongsTo(Category)
+
+    🧩 Pivot Tables (Bảng liên kết nhiều-nhiều) - dự kiến
+        discount_product	    Nhiều Discount áp dụng cho nhiều Product
+        promotion_product	    Nhiều Promotion áp dụng cho nhiều Product
+        product_tag (tuỳ chọn)	Nhiều Tag gắn với nhiều Product (nếu có Tagging system)
+
+    -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+    =>  Chi tiết mối quan hệ nổi bật
+        -   Order là trung tâm luồng giao dịch → liên kết đến Customer, Shipping, Payment, TaxRate, Discount, OrderItems.
+        -   Product liên kết 2 chiều đến Discount, Promotion, Review, Category.
+        -   Translate dùng thiết kế morph hoặc bảng _translations để hỗ trợ đa ngôn ngữ cho Product, Category, v.v.
+
+
+## Luồng giao dịch
+    [Customer]
+    ↓
+    Duyệt [Category] → chọn [Product]
+    ↓
+    Xem thông tin (giá + [Promotion] + [Discount] + [TaxRate])
+    ↓
+    Thêm vào giỏ
+    ↓
+    Chọn phương thức [Shipping] & [Payment]
+    ↓
+    Áp dụng [Discount] (nếu có)
+    ↓
+    Tạo [Order] (kèm [TaxRate], [Discount], [Shipping], [Payment])
+    ↓
+    Thanh toán (nếu online)
+    ↓
+    Hoàn tất đơn hàng
+    ↓
+    Gửi mail / hiển thị thông báo
+    ↓
+    [Review] sản phẩm sau khi nhận
