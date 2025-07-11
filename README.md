@@ -9,25 +9,42 @@ Tài khoản mẫu
 ## 🚀 Cài đặt dự án
 
 ```bash
-git clone https://github.com/your-username/admin-ecommerce.git
-cd admin-ecommerce
-cp .env.example .env
+# clone pproject
+git clone git@github.com:Sang2536/e-commerce.git
+cd e-commerce
+
+# install package
 composer install
+npm install
+npm run dev
+
+# create file .env
+cp .env.example .env
+
+# create APP_KEY
 php artisan key:generate
+
+# run migration & seed sample data
 php artisan migrate --seed
-npm install && npm run dev
+
+# create admin user manually
+php artisan make:user --name="Admin" --email="admin.ecommerce@example.com" --password="password"
+
+# run server
 php artisan serve
 ```
 
 ## ⚙️ Công nghệ sử dụng
 
-- Laravel 10+
-- MySQL / MariaDB
-- Laravel Breeze / Jetstream
-- Blade (hoặc VueJS nếu có)
-- TailwindCSS
+- PHP 8+
+- Laravel 12+
+- Laravel Breeze
 - Spatie Laravel Permission (RBAC)
-- Laravel Excel (tuỳ chọn)
+- Laravel Excel
+- Blade (Components)
+- MySQL
+- TailwindCSS
+- Alpinejs
 
 
 ## ✨ Tính năng chính
@@ -48,142 +65,144 @@ php artisan serve
 - ✅ Hệ thống bật / tắt các package
 
 
-## Model
-    Dự kiến
-- Nhóm người dùng & quyền hạn
-  - User	            ->  Quản trị viên (admin, staff, moderator...)
-  - Customer	        ->	Người mua hàng
-  - Address		        ->  Địa chỉ giao hàng của khách hàng
-  - Role / Permission	->  Phân quyền RBAC
+## 📘Model
+DỰ KIẾN
 
-- Nhóm xác thực & bảo mật
-  - LoginLog	        ->  Nhật ký đăng nhập
-  - PasswordReset	    ->  Reset mật khẩu
-  - ApiToken	        ->  Token bảo mật khi dùng API
+    - Nhóm người dùng & quyền hạn
+      - User	            ->  Quản trị viên (admin, staff, moderator...)
+      - Customer	        ->	Người mua hàng
+      - Address		        ->  Địa chỉ giao hàng của khách hàng
+      - Role / Permission	->  Phân quyền RBAC
+    
+      - Nhóm xác thực & bảo mật
+        - LoginLog	        ->  Nhật ký đăng nhập
+        - PasswordReset	    ->  Reset mật khẩu
+        - ApiToken	        ->  Token bảo mật khi dùng API
+    
+      - Nhóm sản phẩm & danh mục
+        - Category            ->  Danh mục sản phẩm (có thể lồng nhau - parent/child)
+        - Product             ->  Những thông tin chính của sản phẩm
+        - ProductVariant      ->  Phiên bản sản phẩm (màu sắc, size, chất liệu, thương hiệu...)
+        - ProductImage        ->  Hình ảnh sản phẩm
+        - ProductInventory    ->  Quản lý tồn kho cho từng biến thể sản phẩm
+        - Brand               ->  Thương hiệu sản phẩm
+        - Tag                 ->  Thẻ cho nhóm sản phẩm, danh mục, ...
+    
+      - Nhóm giá, khuyến mãi & thuế
+        - Discount	        ->  Giảm giá (phần trăm, theo sản phẩm, đơn hàng...)
+        - Promotion	        ->  Chiến dịch khuyến mãi lớn
+        - TaxRate	            ->  Thuế áp dụng theo khu vực, sản phẩm...
+        - Voucher / Coupon	->  Mã giảm giá có thể nhập khi thanh toán
+    
+      - Nhóm đơn hàng & giao dịch
+        - Order	            ->  Đơn hàng của khách hàng
+        - OrderItem	        ->  Sản phẩm cụ thể trong đơn hàng
+        - OrderStatus	        ->  Trạng thái đơn hàng (mới, xử lý, giao, huỷ...)
+        - Payment	            ->  Thông tin thanh toán
+        - PaymentMethod	    ->  Phương thức thanh toán (COD, VNPay, Momo...)
+        - Shipping	        ->  Thông tin giao hàng
+        - ShippingMethod	    ->  Hình thức giao hàng (GHTK, GHN, Tự giao...)
+        - Invoice	            ->  Hoá đơn xuất cho đơn hàng
+    
+      - Nhóm đánh giá & tương tác
+        - Review	            ->  Đánh giá sản phẩm, sao, bình luận, ...
+        - Wishlist	        ->  Danh sách yêu thích của khách
+        - Cart	            ->  Giỏ hàng
+        - CartItem	        ->  Mỗi sản phẩm trong giỏ hàng
+    
+      - Nhóm thống kê & theo dõi
+        - Analytics	        ->  Thống kê lượt xem, mua hàng...
+        - ActivityLog	        ->  Lịch sử hoạt động (log action)
+        - Notification	    ->  Thông báo hệ thống
+        - Visitor	            ->  Theo dõi người dùng ẩn danh, cookie...
+    
+      - Nhóm nội dung & marketing
+        - Ads	                ->  Quảng cáo
+        - BlogPost	        ->  Bài viết, tin tức
+        - Page	            ->  Trang tĩnh (About Us, Provision, Service, Contact, ...)
+        - Faq	                ->  Hỏi đáp thường gặp
+        - Subscriber	        ->  Người đăng ký (nhận email, thông báo web, ...)
+        - MailTemplate	    ->  Mẫu email gửi đi
+    
+      - Nhóm đa ngôn ngữ & địa lý & tiền tệ
+        - Language	        ->  Ngôn ngữ được hỗ trợ
+        - Translate	        ->  Bản dịch cho sản phẩm, trang, danh mục...
+        - Country 	        ->  Dữ liệu địa lý phục vụ shipping/tax
+        - Currencie           ->  Dữ liệu tiền tệ
+    
+      - Nhóm cài đặt & thiết lập
+        - System              ->  Thiết lập hệ thống
+        - Setting             ->  Cài đặt cho các Model
+        - ApiSetting          ->  Cài đặt kết nối Api
+        - SocialSetting       ->  Cài đặt kết nối mạng xã hội
 
-- Nhóm sản phẩm & danh mục
-  - Category            ->  Danh mục sản phẩm (có thể lồng nhau - parent/child)
-  - Product             ->  Những thông tin chính của sản phẩm
-  - ProductVariant      ->  Phiên bản sản phẩm (màu sắc, size, chất liệu, thương hiệu...)
-  - ProductImage        ->  Hình ảnh sản phẩm
-  - ProductInventory    ->  Quản lý tồn kho cho từng biến thể sản phẩm
-  - Brand               ->  Thương hiệu sản phẩm
-  - Tag                 ->  Thẻ cho nhóm sản phẩm, danh mục, ...
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
-- Nhóm giá, khuyến mãi & thuế
-  - Discount	        ->  Giảm giá (phần trăm, theo sản phẩm, đơn hàng...)
-  - Promotion	        ->  Chiến dịch khuyến mãi lớn
-  - TaxRate	            ->  Thuế áp dụng theo khu vực, sản phẩm...
-  - Voucher / Coupon	->  Mã giảm giá có thể nhập khi thanh toán
+BẢNG QUAN HỆ MODEL
+  
+      Category	    hasMany(Product)
 
-- Nhóm đơn hàng & giao dịch
-  - Order	            ->  Đơn hàng của khách hàng
-  - OrderItem	        ->  Sản phẩm cụ thể trong đơn hàng
-  - OrderStatus	        ->  Trạng thái đơn hàng (mới, xử lý, giao, huỷ...)
-  - Payment	            ->  Thông tin thanh toán
-  - PaymentMethod	    ->  Phương thức thanh toán (COD, VNPay, Momo...)
-  - Shipping	        ->  Thông tin giao hàng
-  - ShippingMethod	    ->  Hình thức giao hàng (GHTK, GHN, Tự giao...)
-  - Invoice	            ->  Hoá đơn xuất cho đơn hàng
+      Product	        belongsTo(Category)
+                      belongsToMany(Discount)
+                      belongsToMany(Promotion)
+                      hasMany(ProductTranslation)
+                      hasMany(Review)
 
-- Nhóm đánh giá & tương tác
-  - Review	            ->  Đánh giá sản phẩm, sao, bình luận, ...
-  - Wishlist	        ->  Danh sách yêu thích của khách
-  - Cart	            ->  Giỏ hàng
-  - CartItem	        ->  Mỗi sản phẩm trong giỏ hàng
+      Customer	    hasMany(Order)
+                      hasMany(Review)
+                      hasMany(Shipping)
 
-- Nhóm thống kê & theo dõi
-  - Analytics	        ->  Thống kê lượt xem, mua hàng...
-  - ActivityLog	        ->  Lịch sử hoạt động (log action)
-  - Notification	    ->  Thông báo hệ thống
-  - Visitor	            ->  Theo dõi người dùng ẩn danh, cookie...
+      Order	        hasMany(OrderItem)
+                      belongsTo(Customer)
+                      belongsTo(Shipping)
+                      belongsTo(Payment)
+                      belongsTo(TaxRate)
+                      belongsTo(Discount)
 
-- Nhóm nội dung & marketing
-  - Ads	                ->  Quảng cáo
-  - BlogPost	        ->  Bài viết, tin tức
-  - Page	            ->  Trang tĩnh (About Us, Provision, Service, Contact, ...)
-  - Faq	                ->  Hỏi đáp thường gặp
-  - Subscriber	        ->  Người đăng ký (nhận email, thông báo web, ...)
-  - MailTemplate	    ->  Mẫu email gửi đi
+      Shipping	    hasMany(Order)
+                      belongsTo(Customer)
+                      belongsTo(ShippingMethod)
 
-- Nhóm đa ngôn ngữ & địa lý & tiền tệ
-  - Language	        ->  Ngôn ngữ được hỗ trợ
-  - Translate	        ->  Bản dịch cho sản phẩm, trang, danh mục...
-  - Country 	        ->  Dữ liệu địa lý phục vụ shipping/tax
-  - Currencie           ->  Dữ liệu tiền tệ
+      ShippingMethod	hasMany(Shipping)
 
-- Nhóm cài đặt & thiết lập
-  - System              ->  Thiết lập hệ thống
-  - Setting             ->  Cài đặt cho các Model
-  - ApiSetting          ->  Cài đặt kết nối Api
-  - SocialSetting       ->  Cài đặt kết nối mạng xã hội
+      Payment	        hasMany(Order)
+                      belongsTo(PaymentMethod)
 
-    -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+      PaymentMethod	hasMany(Payment)
 
-    BẢNG QUAN HỆ MODEL
-        Category	    hasMany(Product)
+      Discount	    hasMany(Order)
+                      hasMany(DiscountTranslation)
+                      belongsToMany(Product)
 
-        Product	        belongsTo(Category)
-                        belongsToMany(Discount)
-                        belongsToMany(Promotion)
-                        hasMany(ProductTranslation)
-                        hasMany(Review)
+      Promotion	    hasMany(PromotionTranslation)
+                      belongsToMany(Product)
 
-        Customer	    hasMany(Order)
-                        hasMany(Review)
-                        hasMany(Shipping)
+      Review	        belongsTo(Customer)
+                      belongsTo(Product)
 
-        Order	        hasMany(OrderItem)
-                        belongsTo(Customer)
-                        belongsTo(Shipping)
-                        belongsTo(Payment)
-                        belongsTo(TaxRate)
-                        belongsTo(Discount)
+      TaxRate	        hasMany(Order)
+                      can - belongTo(Product)
 
-        Shipping	    hasMany(Order)
-                        belongsTo(Customer)
-                        belongsTo(ShippingMethod)
+      Translate	    MorphTo: áp dụng cho ProductTranslation, CategoryTranslation, DiscountTranslation, PromotionTranslation, v.v.
 
-        ShippingMethod	hasMany(Shipping)
+      ProductTranslation	    belongsTo(Product)
 
-        Payment	        hasMany(Order)
-                        belongsTo(PaymentMethod)
+      CategoryTranslation	    belongsTo(Category)
 
-        PaymentMethod	hasMany(Payment)
+Pivot Tables (Bảng liên kết nhiều-nhiều) - dự kiến
 
-        Discount	    hasMany(Order)
-                        hasMany(DiscountTranslation)
-                        belongsToMany(Product)
+      discount_product	    Nhiều Discount áp dụng cho nhiều Product
+      promotion_product	    Nhiều Promotion áp dụng cho nhiều Product
+      product_tag (tuỳ chọn)	Nhiều Tag gắn với nhiều Product (nếu có Tagging system)
 
-        Promotion	    hasMany(PromotionTranslation)
-                        belongsToMany(Product)
-
-        Review	        belongsTo(Customer)
-                        belongsTo(Product)
-
-        TaxRate	        hasMany(Order)
-                        can - belongTo(Product)
-
-        Translate	    MorphTo: áp dụng cho ProductTranslation, CategoryTranslation, DiscountTranslation, PromotionTranslation, v.v.
-
-        ProductTranslation	    belongsTo(Product)
-
-        CategoryTranslation	    belongsTo(Category)
-
-    🧩 Pivot Tables (Bảng liên kết nhiều-nhiều) - dự kiến
-        discount_product	    Nhiều Discount áp dụng cho nhiều Product
-        promotion_product	    Nhiều Promotion áp dụng cho nhiều Product
-        product_tag (tuỳ chọn)	Nhiều Tag gắn với nhiều Product (nếu có Tagging system)
-
-    -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-
-    =>  Chi tiết mối quan hệ nổi bật
-        -   Order là trung tâm luồng giao dịch → liên kết đến Customer, Shipping, Payment, TaxRate, Discount, OrderItems.
-        -   Product liên kết 2 chiều đến Discount, Promotion, Review, Category.
-        -   Translate dùng thiết kế morph hoặc bảng _translations để hỗ trợ đa ngôn ngữ cho Product, Category, v.v.
+Chi tiết mối quan hệ nổi bật
+  
+      -   Order là trung tâm luồng giao dịch → liên kết đến Customer, Shipping, Payment, TaxRate, Discount, OrderItems.
+      -   Product liên kết 2 chiều đến Discount, Promotion, Review, Category.
+      -   Translate dùng thiết kế morph hoặc bảng _translations để hỗ trợ đa ngôn ngữ cho Product, Category, v.v.
 
 
-## Luồng giao dịch
+##  📊Luồng giao dịch
     [Customer]
     ↓
     Duyệt [Category] → chọn [Product]
